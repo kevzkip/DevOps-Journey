@@ -1,0 +1,21 @@
+site_name: Kevin's DevOps Journey
+site_url: https://kevzkip.github.io/DevOps-Journey/
+site_author: Kevin
+
+theme:
+  name: material
+  palette:
+    - scheme: slate
+      primary: indigo
+      accent: deep purple
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+
+# Clean, ordered navigation mapping to your numbered files
+nav:
+  - Home: 00-index.md
+  - 01. Environment Setup: 01-environment-setup.md

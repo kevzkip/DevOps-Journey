@@ -1,3 +1,10 @@
+# Python Virtual Environments
+venv/
+
+# MkDocs build output
+site/
+
+# Windows OS metadata
 desktop.ini
 Thumbs.db
 $RECYCLE.BIN/

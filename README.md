@@ -1,26 +1,92 @@
-# 🚀 DevOps & SRE Engineering Journey
+# 🏗️ Infra Lab
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Platform-Windows%2011%20%2F%20WSL2-blue?style=for-the-badge&logo=windows&logoColor=white" alt="Platform">
-  <img src="https://img.shields.io/badge/OS-Ubuntu-E95420?style=for-the-badge&logo=ubuntu&logoColor=white" alt="Ubuntu">
-  <img src="https://img.shields.io/badge/Infrastructure-Docs%20as%20Code-success?style=for-the-badge&logo=git&logoColor=white" alt="Docs as Code">
-</p>
+A systems engineering lab: Linux, Go, containers, observability, and the CI/CD
+that ties them together.
 
----
+This repo holds the tooling, configuration, and documentation behind my work in
+systems and infrastructure engineering.
 
-Welcome to my public DevOps and SRE learning repository. This repository documents hands-on system architecture, configuration management, and automation practices using an isolated, CLI-driven workflow.
+## 🧰 Stack
 
-## 🏗️ System Architecture & Workstation Layout
+| Layer             | Tool                         |
+| ----------------- | ---------------------------- |
+| Docs framework    | MkDocs Material 9.7.0        |
+| Language (docs)   | Python 3.12                  |
+| CI/CD             | GitHub Actions               |
+| Hosting           | GitHub Pages                 |
+| Local development | WSL 2 (Ubuntu) on Windows 11 |
 
-* **Host Platform:** Windows 11 running Windows Terminal with native WSL 2 (Ubuntu distribution) as the primary Linux kernel interface[cite: 1].
-* **Storage Strategy:** Workspaces are isolated on a secondary partition (`D:` drive) to optimize resource separation and prevent root system disk bloat[cite: 1].
-* **Path Abstraction:** Public documentation and scripts use generalized home directory pathing (`~/DevOps-Journey`) for cross-platform reproducibility[cite: 1].
+## 📁 Repository layout
 
-## 📂 Repository Structure
+```text
+.
+├── .github/
+│   └── workflows/
+│       └── deploy.yml              # CI/CD — build and deploy the docs site
+├── docs/                           # Markdown source for the published site
+│   ├── index.md                    # Home page
+│   ├── 01-environment-setup.md
+│   └── 02-documentation-as-code.md
+├── mkdocs.yml                      # MkDocs configuration
+├── requirements.txt                # Pinned Python dependencies
+└── README.md
+```
 
-- [`docs/`](docs/): Architectural logs, setup guides, and learning modules[cite: 1].
-- [`configs/`](configs/): Configuration files and environment templates[cite: 1].
-- [`scripts/`](scripts/): Automation utilities and shell scripts[cite: 1].
+## 💻 Local development
 
----
-*Maintained as part of an ongoing systems engineering portfolio.*
+Requires Python 3.10+ and a Unix-like shell. Tested on WSL 2 (Ubuntu).
+
+Create a virtual environment outside the repo — keeps the project tree clean and
+avoids running Linux binaries from the Windows filesystem.
+
+```bash
+python3 -m venv ~/venvs/mkdocs-infra
+source ~/venvs/mkdocs-infra/bin/activate
+```
+
+Install pinned dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+Serve locally with live reload:
+
+```bash
+mkdocs serve
+```
+
+The site is available at `http://127.0.0.1:8000/infra-lab/`.
+
+Build the static site into `./site/`:
+
+```bash
+mkdocs build --strict
+```
+
+`--strict` fails the build on any warning — broken internal links, missing nav
+entries, unknown anchors. CI runs the same command, so a clean local build is a
+clean pipeline build.
+
+## 🚀 Deployment
+
+Deployment is handled by GitHub Actions on every push to `main`.
+
+Pipeline stages:
+
+1. Checkout the repo, set up Python 3.12 with pip caching.
+2. Install dependencies from `requirements.txt`.
+3. Run `mkdocs build --strict`.
+4. Upload `site/` as a Pages artifact.
+5. Publish the artifact to GitHub Pages.
+
+The build and deploy steps run as separate jobs — deploy only proceeds if build
+succeeds. A failed build does not touch the live site.
+
+Live site: <https://kevzkip.github.io/infra-lab/>
+
+## 📌 Versioning policy
+
+Top-level dependencies are pinned exactly (e.g. `mkdocs-material==9.7.0`).
+Transitive dependencies are not pinned. If a transitive package ever breaks a
+build, it gets pinned with an inline comment explaining why.

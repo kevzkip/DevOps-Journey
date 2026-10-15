@@ -1,6 +1,8 @@
 site_name: Infra Lab
 site_url: https://kevzkip.github.io/infra-lab/
-site_author: Kevin
+site_author: Kevin Kipkorir
+site_description: >-
+  Systems engineering notes — Linux, Go, containers, observability.
 
 theme:
   name: material
@@ -11,11 +13,16 @@ theme:
   features:
     - navigation.instant
     - navigation.tracking
+    - navigation.indexes
+    - navigation.top
     - search.suggest
     - search.highlight
     - content.code.copy
+    - toc.follow
 
-# Clean, ordered navigation mapping to your numbered files
 nav:
-  - Home: 00-index.md
-  - 01. Environment Setup: 01-environment-setup.md
+  - Home: index.md
+  - Environment Setup: 01-environment-setup.md
+  - Documentation as Code: 02-documentation-as-code.md
+
+strict: true
